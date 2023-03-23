@@ -347,15 +347,6 @@ if __name__ == '__main__':
     args.n_eval = 0
     args.num_labels = int(args.num_labels)
 
-    torch.manual_seed(13194315146299443413)
-    torch.cuda.manual_seed(2046292027388612)
-    np.random.seed(2147483648)
-    random.seed(2147483648)
-    #torch.cuda.manual_seed_all(random_seed) # if use multi-GPU
-    torch.backends.cudnn.deterministic = True  # for the final push
-    torch.backends.cudnn.benchmark = False
-    #np.random.set_state(st)  # st = np.randeom.get_state()
-    
     gc.collect()
     torch.cuda.empty_cache()
 
