@@ -75,7 +75,7 @@ def test(args):
         with open(args.dir_result + '/for_explain_lime.json', 'w') as f:
             f.write('\n'.join(json.dumps(i,cls=NumpyEncoder) for i in lime_dict_list))
         
-        get_explain_results(args)  # The test_res_explain.txt file will be writen
+        get_explain_results(args)  # The test_res_explain.txt file will be written
 
 
 if __name__ == '__main__':
