@@ -30,7 +30,7 @@ RUN source activate mrp && \
 
 # Install other libraries, you can add other libraries here as you want
 #RUN pip install --upgrade pip
-# RUN python3 -m pip install --no-cache-dir emoji==1.6.1 transformers numpy scikit-learn tqdm lime seaborn pandas matplotlib torch_optimizer more-itertools
+RUN python3 -m pip install --no-cache-dir emoji==1.6.1 transformers numpy scikit-learn tqdm lime seaborn pandas matplotlib torch_optimizer more-itertools
 
 ## STAGE 2 ##
 
