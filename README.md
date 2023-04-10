@@ -1,7 +1,7 @@
 # Why Is It Hate Speech? Masked Rationale Prediction for Explainable Hate Speech Detection (COLING 2022)
 **Paper link: [COLING](https://aclanthology.org/2022.coling-1.577/)  |  [arXiv](https://arxiv.org/abs/2211.00243)** <br>
 
-## Dockerizing
+## Initial Setting
 First, Clone this git repository
 ```
 git clone https://github.com/alatteaday/mrp_hate-speech-detection/
