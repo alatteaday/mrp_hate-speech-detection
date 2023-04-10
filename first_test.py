@@ -1,11 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
-
+#
 from transformers import BertTokenizer, BertForTokenClassification
 import os
 from sklearn.preprocessing import MultiLabelBinarizer
+import argparse
 
-from first_train import get_args_1
 from dataset import HateXplainDataset
 from utils import get_device, add_tokens_to_tokenizer
 from first_train import evaluate
@@ -25,7 +25,7 @@ def test(args):
     
     losses, loss_avg, time_avg, acc, f1 = evaluate(args, model, test_dataloader, tokenizer, None, mlb)
 
-    print("Checkpoint: ", args.model_path)
+    print("\nCheckpoint: ", args.model_path)
     print("Loss_avg: {} / min: {} / max: {} | Consumed_time: {}".format(loss_avg, min(losses), max(losses), time_avg))
     print("Acc: {} | F1: {} \n".format(acc[0], f1[0]))
 
@@ -37,7 +37,20 @@ def test(args):
 
 
 if __name__ == '__main__':
-    args = get_args_1()
+    parser = argparse.ArgumentParser(description='')
+    
+    # DATASET
+    parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
+
+    # PRETRAINED MODEL
+    model_choices = ['bert-base-uncased']
+    parser.add_argument('--pretrained_model', default='bert-base-uncased', choices=model_choices, help='a pre-trained bert model to use')  
+
+    # TEST
+    parser.add_argument('-m', '--model_path', type=str, required=True, help='the checkpoint path to test')  
+    
+    args = parser.parse_args()
+
     args.test = True
     args.intermediate = 'rp'
     args.device = get_device()
@@ -45,7 +58,7 @@ if __name__ == '__main__':
     args.batch_size = 1
     args.n_eval = 0
 
-    args.dir_result = '/'.join(args.model_path.split('/')[:6])
+    args.dir_result = '/'.join(args.model_path.split('/')[:-1])
     print("Checkpoint path: ", args.model_path)
     print("Result path: ", args.dir_result)
 

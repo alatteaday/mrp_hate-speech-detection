@@ -26,10 +26,6 @@ from module import BertForTCwMRP
 def get_args_1():
     parser = argparse.ArgumentParser(description='')
 
-    # TEST
-    parser.add_argument('--test', action='store_true', help='should be True to run test.py')
-    parser.add_argument('-m', '--model_path', required='--test' in sys.argv, help='the checkpoint path to test')  
-
     # DATASET
     parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
     
@@ -45,7 +41,7 @@ def get_args_1():
     parser.add_argument('--patience', type=int, default=3)
 
     ## Pre-Finetuing Task
-    parser.add_argument('--intermediate', default='rp', choices=['mrp', 'rp'], required=not '--test' in sys.argv, help='choice of an intermediate task')
+    parser.add_argument('--intermediate', choices=['mrp', 'rp'], required=True, help='choice of an intermediate task')
 
     ## Masked Ratioale Prediction 
     parser.add_argument('--mask_ratio', type=float, default=0.5)

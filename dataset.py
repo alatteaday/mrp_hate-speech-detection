@@ -6,8 +6,11 @@ import os
 import json
 import numpy as np
 import emoji
+import sys
+import argparse
 
 from utils import add_tokens_to_tokenizer, get_token_rationale
+
 
 
 class HateXplainDataset(Dataset):
@@ -118,7 +121,42 @@ class HateXplainDatasetForBias(Dataset):
         return (text, cls_num, post_id)
 
 
-    
+if __name__ == '__main__':
+    def get_args_1():
+        parser = argparse.ArgumentParser(description='')
+
+        # TEST
+        parser.add_argument('--test', action='store_true', help='should be True to run test.py')
+        parser.add_argument('-m', '--model_path', required='--test' in sys.argv, help='the checkpoint path to test')  
+
+        # DATASET
+        parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
+        
+        # PRETRAINED MODEL
+        model_choices = ['bert-base-uncased']
+        parser.add_argument('--pretrained_model', default='bert-base-uncased', choices=model_choices, help='a pre-trained bert model to use')  
+
+        # TRAIN
+        parser.add_argument('--batch_size', type=int, default=16)
+        parser.add_argument('--epochs', type=int, default=5)
+        parser.add_argument('--lr', type=float, default=0.00005)
+        parser.add_argument('--val_int', type=int, default=945)  
+        parser.add_argument('--patience', type=int, default=3)
+
+        ## Pre-Finetuing Task
+        parser.add_argument('--intermediate', default='rp', choices=['mrp', 'rp'], required=not '--test' in sys.argv, help='choice of an intermediate task')
+
+        ## Masked Ratioale Prediction 
+        parser.add_argument('--mask_ratio', type=float, default=0.5)
+        parser.add_argument('--n_tk_label', type=int, default=2)
+
+        args = parser.parse_args()
+        return args   
+
+    args = get_args_1()
+
+    dataset = HateXplainDataset(args, 'train')
+    print(dataset[3])
     
     
 
@@ -128,3 +166,4 @@ class HateXplainDatasetForBias(Dataset):
     
 
         
+# 10001291_gab

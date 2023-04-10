@@ -3,6 +3,7 @@ import more_itertools as mit
 import os
 import emoji
 import copy
+import argparse
 from transformers import BertTokenizer
 
 from utils import get_device, get_token_rationale, add_tokens_to_tokenizer
@@ -31,7 +32,6 @@ def get_dataset_for_explain(data_dir, tokenizer, method):
 
             assert len(bi_rat_token) == len(encoded_text)
             if 1 not in bi_rat_token and data['final_label'] in ('offensive', 'hatespeech'):
-                print('[!] 1 doesnt exist in rationale | {} / label: {} / {}'.format(post_id, data['final_label'], bi_rat_token))
                 continue
             output_list.append([post_id, data['final_label'], encoded_text, bi_rat_token, label_list])
     
@@ -85,7 +85,7 @@ def convert_to_eraser_format(dataset, method, save_split, save_path, id_division
     if save_split:
         train_fp = open(os.path.join(save_path, 'train.jsonl'), 'w')
         val_fp = open(os.path.join(save_path, 'val.jsonl'), 'w')
-        test_fp = open(os.path.join(save_path+'test.jsonl'), 'w')
+        test_fp = open(os.path.join(save_path, 'test.jsonl'), 'w')
             
     for tcount, eachrow in enumerate(dataset):
         temp = {}
@@ -112,7 +112,7 @@ def convert_to_eraser_format(dataset, method, save_split, save_path, id_division
             if not os.path.exists(docs_dir):
                 os.makedirs(docs_dir)
             
-            with open(os.path.join(docs_dir, post_id), 'w') as fp:
+            with open(os.path.join(docs_dir, post_id), 'w+') as fp:
                 fp.write(' '.join([str(x) for x in list(anno_text_list)]))
             
             if post_id in id_division['train']:
@@ -134,12 +134,12 @@ def convert_to_eraser_format(dataset, method, save_split, save_path, id_division
     return final_output
 
 def get_explain_results(args):
-    data_dir = os.path.join(args.dir_hatexplain, 'hatexplain_thr_div_6.json')
-    save_path = os.path.join(args.dir_hatexplain, 'explain_metric/model_eval/')  # The dataset in Eraser format will be stored here
+    data_dir = os.path.join(args.dir_hatexplain, 'hatexplain_thr_div.json')
+    save_path = './metrics/'  # The dataset in Eraser format will be stored here
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    # If should get dataset in Ereser format
+    # If should get dataset in Eraser format
     method = 'union'
     get_eval_data = False  # turn it to True
     if get_eval_data:  
@@ -222,3 +222,36 @@ def get_explain_results(args):
     log.close()
 
 
+if __name__ == '__main__':
+    """
+    parser = argparse.ArgumentParser(description='')
+
+    # DATASET
+    parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
+
+    # PRETRAINED MODEL
+    model_choices = ['bert-base-uncased']
+    parser.add_argument('--pretrained_model', default='bert-base-uncased', choices=model_choices, help='a pretrained bert model to use')
+    
+    # TEST
+    parser.add_argument('-m', '--model_path', type=str, required=True, help='the checkpoint path to test')  
+    
+    ## Explainability based metrics
+    parser.add_argument('--top_k', default=5, help='the top num of attention values to evaluate on explainable metrics')
+    parser.add_argument('--lime_n_sample', default=100, help='the num of samples for lime explainer')
+
+    args = parser.parse_args()  
+
+    args.test = True
+    args.intermediate = False
+    args.batch_size = 1
+    args.n_eval = 0
+    args.device = get_device()
+
+    args.num_labels = 3
+    
+    args.dir_result = '/'.join(args.model_path.split('/')[:-1])
+    assert args.dir_result
+
+    get_explain_results(args)
+    """

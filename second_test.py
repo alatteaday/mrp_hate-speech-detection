@@ -6,8 +6,8 @@ import numpy as np
 import os
 from tqdm import tqdm
 import json
+import argparse
 
-from second_train import get_args_2
 from dataset import HateXplainDataset, HateXplainDatasetForBias
 from utils import get_device, add_tokens_to_tokenizer, NumpyEncoder
 from second_train import evaluate
@@ -79,25 +79,43 @@ def test(args):
 
 
 if __name__ == '__main__':
-    args = get_args_2()
-    args.device = get_device()
+    parser = argparse.ArgumentParser(description='')
+
+    # DATASET
+    parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
+
+    # PRETRAINED MODEL
+    model_choices = ['bert-base-uncased']
+    parser.add_argument('--pretrained_model', default='bert-base-uncased', choices=model_choices, help='a pretrained bert model to use')
     
+    # TEST
+    parser.add_argument('-m', '--model_path', type=str, required=True, help='the checkpoint path to test')  
+    
+    ## Explainability based metrics
+    parser.add_argument('--top_k', default=5, help='the top num of attention values to evaluate on explainable metrics')
+    parser.add_argument('--lime_n_sample', default=100, help='the num of samples for lime explainer')
+
+    args = parser.parse_args()  
+
     args.test = True
+    args.intermediate = False
     args.batch_size = 1
     args.n_eval = 0
+    args.device = get_device()
 
-    if 'ncls2' in args.model_path.split('/')[7]:
+    if 'ncls2' in args.model_path:
         args.num_labels = 2
-    elif 'ncls3' in args.model_path.split('/')[7]:
+    elif 'ncls3' in args.model_path:
         args.num_labels = 3
     else:
         print("[!] should check num_labels your checkpoint was trained for and set the right value")
         exit()
     
-    args.dir_result = '/'.join(args.model_path.split('/')[:7])
+    args.dir_result = '/'.join(args.model_path.split('/')[:-1])
     assert args.dir_result
-
+    
     print("Checkpoint: ", args.model_path)
     print("Result path: ", args.dir_result)
+    
 
     test(args)

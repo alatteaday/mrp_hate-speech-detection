@@ -22,12 +22,7 @@ from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 def get_args_2():
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--intermediate', default=False)
 
-    # TEST
-    parser.add_argument('--test', action='store_true', help='should be True to run test.py')
-    parser.add_argument('-m', '--model_path', required='--test' in sys.argv, help='the checkpoint path to test')  
-    
     # DATASET
     parser.add_argument('--dir_hatexplain', type=str, default="./dataset", help='the root directiory of the dataset')
 
@@ -40,10 +35,10 @@ def get_args_2():
     #     '## pre_finetuned_model path ##',
     #     ]
     # parser.add_argument('--pre_finetuned_model', choices=model_paths, default=model_paths[-1])    
-    parser.add_argument('-pf_m', '--pre_finetuned_model', required=not '--test' in sys.argv)
+    parser.add_argument('-pf_m', '--pre_finetuned_model', required=True)
 
     # TRAIN
-    parser.add_argument('--num_labels', choices=['2', '3'], default='2', required=not '--test' in sys.argv, help="3 = [hatespeech/offensive/normal], 2 = [toxic/nontoxic]")
+    parser.add_argument('--num_labels', choices=['2', '3'], default='2', required=True, help="3 = [hatespeech/offensive/normal], 2 = [toxic/nontoxic]")
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--epochs', type=int, default=5)
     parser.add_argument('--lr', type=float, default=0.00002)
@@ -324,11 +319,13 @@ def train(args):
     
 if __name__ == '__main__':
     args = get_args_2()
+    
     args.test = False
+    args.intermediate = False
     args.device = get_device()
     
-    lm = '-'.join(args.pretrained_model.split('-')[:-1])
-    assert lm in args.pre_finetuned_model, "[!] check | the two models are supposed to have the same size"
+    lm = '-'.join(args.pretrained_model.split('-')[:-1])  # ex) 'bert-base' - check 'first_train.py'
+    # assert lm in args.pre_finetuned_model, "[!] check | the two models are supposed to have the same size"
 
     print("Pre-finetuned model path: ", args.pre_finetuned_model)
 
