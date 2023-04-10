@@ -1,16 +1,26 @@
 # Why Is It Hate Speech? Masked Rationale Prediction for Explainable Hate Speech Detection (COLING 2022)
 **Paper link: [COLING](https://aclanthology.org/2022.coling-1.577/)  |  [arXiv](https://arxiv.org/abs/2211.00243)** <br>
 
-## Initial Settings
-1. Clone this git repository
+## Initial Setting
+First, Clone this git repository
 ```
 git clone https://github.com/alatteaday/mrp_hate-speech-detection/
 ```
-2. Install packages
+The docker commands are implemented in GNU Makefile. You can build the linux-anaconda image that the required packages are installed. The details are written in Dockerfile and Makefile. Or you can use the docker commands directly. 
+1. Set the name variables in Makefile, such as IMAGE_NAME, IMAGE_TAG, CONTAINER_NAME, CONTAINER_PORT, NVIDIA_VISIBLE_DEVICES.
+2. Build the docker image. Use the Makefile command on the directory the Dockerfile located.
 ```
-pip install -r requirements.txt
+make docker-build
 ```
-3. Run the codes for training or testing models
+3. Run the docker container from the built image.
+```
+make docker-run
+```
+4. Execute the container.
+```
+make docker-exec
+```
+
 ## Models
 If you would like to run the models, you can download these compressed files via the Google drive links: ['finetune_1st.tar.gz'](https://drive.google.com/file/d/1BCbgKYNH1-uI_hB18dHRez-Sr3F3VFu4/view?usp=share_link) and ['finetune_2nd.tar.gz'](https://drive.google.com/file/d/1cHpBFWFWq8-o6vLFAbDVcm5Mt2SZY_l8/view?usp=share_link). If you would like to run the final hate speech detection models, you only need the **'finetune_2nd'** and don't have to get 'finetune_1st'. <br>
 'finetune_1st' includes the checkpoints of the pre-finetuned models. Each of names shows what's the pre-finetuning method and some infos of the hyperparameters.
