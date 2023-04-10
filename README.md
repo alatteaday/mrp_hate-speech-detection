@@ -41,7 +41,7 @@ If you would like to run the models, you can download these compressed files via
 ## Test
 For testing a model, run second_test.py like below:
 ```python
-python second_test.py --test -m {the model path to test}
+python second_test.py -m {the model path to test}
 ```
 If you run a model which trained on two-class detection, it would be tested for Bias-based metrics of hateXplain benchmark. And a model which trained on three-class detection, you could get the results for Performance-based metrics and Explainability-based metrics. 
 ## Train
