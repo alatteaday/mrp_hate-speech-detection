@@ -1,7 +1,7 @@
 # Set the 5 variables below as you want 
 IMAGE_NAME = mrp-image
-IMAGE_TAG = 0.222
-CONTAINER_NAME = mrp-container_22
+IMAGE_TAG = 0.1
+CONTAINER_NAME = mrp-container
 CONTAINER_PORT = 1234
 NVIDIA_VISIBLE_DEVICES = all  # 'all' OR the numbers of available gpus such as '1,2,3'
 
